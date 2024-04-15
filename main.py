@@ -102,8 +102,8 @@ def worker_read_meter(task_queues):
                     CONFIG["modbus"]["func_code"],
                     CONFIG["modbus"]["reg_num"],
                 )
-                time.sleep(0.05)
                 logger.debug(f"reg: {reg_name}, reading: {reading[reg_name]}")
+                time.sleep(CONFIG["modbus"]["delay_read_register"])
 
             # add timestamp
             if CONFIG["utc"] is True:
@@ -117,7 +117,7 @@ def worker_read_meter(task_queues):
             for queue in task_queues:
                 queue.put(reading)
 
-            time.sleep(0.5)
+            time.sleep(CONFIG["modbus"]["interval"])
 
         except:
             logger.exception("Error in worker_read_meter")

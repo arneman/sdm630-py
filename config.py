@@ -17,6 +17,8 @@ CONFIG = {
         "parity": PARITY_NONE,
         "stopbits": 1,
         "timeout": 0.6,
+        "delay_read_register": 0.1,
+        "interval": 1,
     },
     "registers": [],
     "loglevel": "DEBUG",  # "ERROR",
