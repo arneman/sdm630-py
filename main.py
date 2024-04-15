@@ -15,41 +15,41 @@ REGISTERS = {
     "L1_Voltage": 0,
     "L2_Voltage": 2,
     "L3_Voltage": 4,
-    "L1_Current": 6,
-    "L2_Current": 8,
-    "L3_Current": 10,
-    "L1_L2_Voltage": 200,
-    "L2_L3_Voltage": 202,
-    "L3_L1_Voltage": 204,
+    # "L1_Current": 6,
+    # "L2_Current": 8,
+    # "L3_Current": 10,
+    # "L1_L2_Voltage": 200,
+    # "L2_L3_Voltage": 202,
+    # "L3_L1_Voltage": 204,
     "L1_Active_Power": 12,
     "L2_Active_Power": 14,
     "L3_Active_Power": 16,
-    "L1_Apparent_Power": 18,
-    "L2_Apparent_Power": 20,
-    "L3_Apparent_Power": 22,
-    "L1_Reactive_Power": 24,
-    "L2_Reactive_Power": 26,
-    "L3_Reactive_Power": 28,
-    "L1_Power_Factor": 30,
-    "L2_Power_Factor": 32,
-    "L3_Power_Factor": 34,
-    "L1_Phase_Angle": 36,
-    "L2_Phase_Angle": 38,
-    "L3_Phase_Angle": 40,
-    "L1_Current_THD": 240,
-    "L2_Current_THD": 242,
-    "L3_Current_THD": 244,
+    # "L1_Apparent_Power": 18,
+    # "L2_Apparent_Power": 20,
+    # "L3_Apparent_Power": 22,
+    # "L1_Reactive_Power": 24,
+    # "L2_Reactive_Power": 26,
+    # "L3_Reactive_Power": 28,
+    # "L1_Power_Factor": 30,
+    # "L2_Power_Factor": 32,
+    # "L3_Power_Factor": 34,
+    # "L1_Phase_Angle": 36,
+    # "L2_Phase_Angle": 38,
+    # "L3_Phase_Angle": 40,
+    # "L1_Current_THD": 240,
+    # "L2_Current_THD": 242,
+    # "L3_Current_THD": 244,
     "Total_System_Power": 52,
-    "Total_System_VA": 56,
-    "Total_System_VAR": 60,
-    "Total_System_Power_Demand": 84,
-    "Total_System_Power_Demand_Max": 86,
-    "Total_System_VA_Demand": 100,
+    # "Total_System_VA": 56,
+    # "Total_System_VAR": 60,
+    # "Total_System_Power_Demand": 84,
+    # "Total_System_Power_Demand_Max": 86,
+    # "Total_System_VA_Demand": 100,
     "Frequency": 70,
     "Import_Active_Energy": 72,
     "Export_Active_Energy": 74,
-    "Import_Reactive_Energy": 76,
-    "Export_Reactive_Energy": 78,
+    # "Import_Reactive_Energy": 76,
+    # "Export_Reactive_Energy": 78,
     "Total_Active_Energy": 342,
     "Total_Reactive_Energy": 344,
 }
@@ -102,13 +102,12 @@ def worker_read_meter(task_queues):
                     CONFIG["modbus"]["func_code"],
                     CONFIG["modbus"]["reg_num"],
                 )
-                logger.debug(
-                    f"reg: {reg_name}, reading: {reading[reg_name]}, len: {len(reading[reg_name])}"
-                )
+                time.sleep(0.05)
+                logger.debug(f"reg: {reg_name}, reading: {reading[reg_name]}")
 
             # add timestamp
             if CONFIG["utc"] is True:
-                ts = datetime.datetime.now(datetime.UTC)
+                ts = datetime.datetime.now(datetime.timezone.utc)
             else:
                 ts = datetime.datetime.now()
 
@@ -117,6 +116,8 @@ def worker_read_meter(task_queues):
             # publish
             for queue in task_queues:
                 queue.put(reading)
+
+            time.sleep(0.5)
 
         except:
             logger.exception("Error in worker_read_meter")
